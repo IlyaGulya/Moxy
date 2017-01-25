@@ -1,11 +1,14 @@
 package com.arellomobile.mvp.sample.github.mvp.presenters;
 
-import java.util.List;
+import android.graphics.Color;
 
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 import com.arellomobile.mvp.sample.github.mvp.models.Repository;
 import com.arellomobile.mvp.sample.github.mvp.views.RepositoryView;
+
+import java.util.List;
+import java.util.Random;
 
 /**
  * Date: 27.01.2016
@@ -22,8 +25,9 @@ public class RepositoryPresenter extends MvpPresenter<RepositoryView> {
 
 	public RepositoryPresenter(Repository repository) {
 		super();
-
 		mRepository = repository;
+		final Random random = new Random();
+		getViewState().setBackgroundColor(Color.argb(255, random.nextInt(256), random.nextInt(256), random.nextInt(256)));
 	}
 
 	@Override

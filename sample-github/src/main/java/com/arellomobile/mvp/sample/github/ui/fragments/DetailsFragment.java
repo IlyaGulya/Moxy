@@ -1,7 +1,5 @@
 package com.arellomobile.mvp.sample.github.ui.fragments;
 
-import java.util.List;
-
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -20,6 +18,8 @@ import com.arellomobile.mvp.sample.github.mvp.presenters.RepositoryPresenter;
 import com.arellomobile.mvp.sample.github.mvp.views.RepositoryLikesView;
 import com.arellomobile.mvp.sample.github.mvp.views.RepositoryView;
 import com.arellomobile.mvp.sample.github.ui.views.RepositoryWidget;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -94,5 +94,10 @@ public class DetailsFragment extends MvpAppCompatFragment implements RepositoryV
 	public void updateLike(boolean isInProgress, boolean isLiked) {
 		mLikeImageButton.setEnabled(!isInProgress);
 		mLikeImageButton.setSelected(isLiked);
+	}
+
+	@Override
+	public void setBackgroundColor(final int color) {
+
 	}
 }

@@ -67,6 +67,7 @@ public class HomeActivity extends MvpAppCompatActivity
 
     setSupportActionBar(mToolbar);
 
+    mSwipeRefreshLayout.setOnRefreshListener(() -> mRepositoriesPresenter.loadRepositories(true));
     mRepositoriesAdapter = new RepositoriesAdapter(getMvpDelegate(), this);
     final GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 4);
     gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
@@ -77,6 +78,10 @@ public class HomeActivity extends MvpAppCompatActivity
     });
     mRepositoriesRecyclerView.setLayoutManager(gridLayoutManager);
     mRepositoriesRecyclerView.setAdapter(mRepositoriesAdapter);
+    mRepositoriesAdapter.setOnItemClickListener((view, t, position, i) -> {
+      mHomePresenter.onRepositorySelection(position, mRepositoriesAdapter.getItem(position));
+    });
+
   }
 
   @Override

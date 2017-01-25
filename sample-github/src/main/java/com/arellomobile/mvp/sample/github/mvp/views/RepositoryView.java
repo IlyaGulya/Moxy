@@ -13,4 +13,6 @@ public interface RepositoryView extends MvpView {
 	void showRepository(Repository repository);
 
 	void updateLike(boolean isInProgress, boolean isLiked);
+
+	void setBackgroundColor(int color);
 }

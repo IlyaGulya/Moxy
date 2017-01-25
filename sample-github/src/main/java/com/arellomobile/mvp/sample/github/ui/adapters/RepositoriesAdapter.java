@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -44,6 +45,7 @@ public class RepositoriesAdapter extends MvpBaseAdapter implements RepositoryLik
 	private List<Integer> mLikesInProgress;
 	private boolean mMaybeMore;
 	private OnScrollToBottomListener mScrollToBottomListener;
+	private AdapterView.OnItemClickListener mOnItemClickListener;
 
 	public RepositoriesAdapter(MvpDelegate<?> parentDelegate, OnScrollToBottomListener scrollToBottomListener) {
 		super(parentDelegate, String.valueOf(0));
@@ -52,6 +54,10 @@ public class RepositoriesAdapter extends MvpBaseAdapter implements RepositoryLik
 		mRepositories = new ArrayList<>();
 		mLiked = new ArrayList<>();
 		mLikesInProgress = new ArrayList<>();
+	}
+
+	public void setOnItemClickListener(final AdapterView.OnItemClickListener onItemClickListener) {
+		mOnItemClickListener = onItemClickListener;
 	}
 
 	public void setRepositories(List<Repository> repositories, boolean maybeMore) {
@@ -169,7 +175,9 @@ public class RepositoriesAdapter extends MvpBaseAdapter implements RepositoryLik
 			getMvpDelegate().onCreate();
 			getMvpDelegate().onAttach();
 
-			view.setBackgroundResource(position == mSelection ? R.color.colorAccent : android.R.color.transparent);
+			view.setOnClickListener(v -> {
+				mOnItemClickListener.onItemClick(null, null, position, 0);
+			});
 
 			likeImageButton.setOnClickListener(v -> mRepositoryLikesPresenter.toggleLike(repository.getId()));
 
@@ -187,6 +195,11 @@ public class RepositoriesAdapter extends MvpBaseAdapter implements RepositoryLik
 		@Override
 		public void updateLike(boolean isInProgress, boolean isLiked) {
 			// pass
+		}
+
+		@Override
+		public void setBackgroundColor(final int color) {
+			view.setBackgroundColor(color);
 		}
 
 		MvpDelegate getMvpDelegate() {
