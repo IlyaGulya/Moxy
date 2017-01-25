@@ -1,6 +1,6 @@
 package com.arellomobile.mvp.sample.github.ui.adapters;
 
-import android.widget.BaseAdapter;
+import android.support.v7.widget.RecyclerView;
 
 import com.arellomobile.mvp.MvpDelegate;
 
@@ -10,7 +10,7 @@ import com.arellomobile.mvp.MvpDelegate;
  *
  * @author Yuri Shmakov
  */
-public abstract class MvpBaseAdapter extends BaseAdapter {
+public abstract class MvpBaseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 	private MvpDelegate<? extends MvpBaseAdapter> mMvpDelegate;
 	private MvpDelegate<?> mParentDelegate;
 	private String mChildId;

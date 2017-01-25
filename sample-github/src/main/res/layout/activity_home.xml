@@ -29,7 +29,7 @@
 				android:layout_height="match_parent"
 				tools:ignore="ScrollViewSize">
 
-				<ListView
+				<android.support.v7.widget.RecyclerView
 					android:id="@+id/activity_home_list_view_repositories"
 					android:layout_width="match_parent"
 					android:layout_height="match_parent"

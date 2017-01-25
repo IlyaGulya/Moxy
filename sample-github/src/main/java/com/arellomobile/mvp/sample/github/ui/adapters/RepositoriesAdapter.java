@@ -1,8 +1,6 @@
 package com.arellomobile.mvp.sample.github.ui.adapters;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +18,9 @@ import com.arellomobile.mvp.sample.github.mvp.presenters.RepositoryLikesPresente
 import com.arellomobile.mvp.sample.github.mvp.presenters.RepositoryPresenter;
 import com.arellomobile.mvp.sample.github.mvp.views.RepositoryLikesView;
 import com.arellomobile.mvp.sample.github.mvp.views.RepositoryView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -87,21 +88,15 @@ public class RepositoriesAdapter extends MvpBaseAdapter implements RepositoryLik
 		return position == mRepositories.size() ? PROGRESS_VIEW_TYPE : REPOSITORY_VIEW_TYPE;
 	}
 
-	@Override
-	public int getViewTypeCount() {
-		return 2;
-	}
-
 	public int getRepositoriesCount() {
 		return mRepositories.size();
 	}
 
 	@Override
-	public int getCount() {
+	public int getItemCount() {
 		return mRepositories.size() + (mMaybeMore ? 1 : 0);
 	}
 
-	@Override
 	public Repository getItem(int position) {
 		return mRepositories.get(position);
 	}
@@ -112,55 +107,53 @@ public class RepositoriesAdapter extends MvpBaseAdapter implements RepositoryLik
 	}
 
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-		if (getItemViewType(position) == PROGRESS_VIEW_TYPE) {
-			if (mScrollToBottomListener != null) {
-				mScrollToBottomListener.onScrollToBottom();
-			}
-
-			return new ProgressBar(parent.getContext());
-		}
-
-		RepositoryHolder holder;
-		if (convertView != null) {
-			holder = (RepositoryHolder) convertView.getTag();
+	public RecyclerView.ViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
+		if (viewType == PROGRESS_VIEW_TYPE) {
+			return new ProgressHolder(new ProgressBar(parent.getContext()));
 		} else {
-			convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_repository, parent, false);
-			holder = new RepositoryHolder(convertView);
-			convertView.setTag(holder);
+			return new RepositoryHolder(LayoutInflater.from(parent.getContext())
+																								.inflate(R.layout.item_repository, parent, false));
 		}
-
-		final Repository item = getItem(position);
-
-		holder.bind(position, item);
-
-		return convertView;
 	}
 
-	public class RepositoryHolder implements RepositoryView {
+	@Override
+	public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
+		if (getItemViewType(position) == REPOSITORY_VIEW_TYPE) {
+			((RepositoryHolder) holder).bind(position, getItem(position));
+		}
+	}
+
+	public interface OnScrollToBottomListener {
+		void onScrollToBottom();
+	}
+
+	public static class ProgressHolder extends RecyclerView.ViewHolder {
+		public ProgressHolder(final View itemView) {
+			super(itemView);
+		}
+	}
+
+	public class RepositoryHolder extends RecyclerView.ViewHolder implements RepositoryView {
 
 		@InjectPresenter
 		RepositoryPresenter mRepositoryPresenter;
-
-		private Repository mRepository;
-
 		@BindView(R.id.item_repository_text_view_name)
 		TextView nameTextView;
 		@BindView(R.id.item_repository_image_button_like)
 		ImageButton likeImageButton;
 		View view;
-
+		private Repository  mRepository;
 		private MvpDelegate mMvpDelegate;
+
+		RepositoryHolder(View view) {
+			super(view);
+			this.view = view;
+			ButterKnife.bind(this, view);
+		}
 
 		@ProvidePresenter
 		RepositoryPresenter provideRepositoryPresenter() {
 			return new RepositoryPresenter(mRepository);
-		}
-
-		RepositoryHolder(View view) {
-			this.view = view;
-
-			ButterKnife.bind(this, view);
 		}
 
 		void bind(int position, Repository repository) {
@@ -208,9 +201,5 @@ public class RepositoriesAdapter extends MvpBaseAdapter implements RepositoryLik
 			}
 			return mMvpDelegate;
 		}
-	}
-
-	public interface OnScrollToBottomListener {
-		void onScrollToBottom();
 	}
 }
